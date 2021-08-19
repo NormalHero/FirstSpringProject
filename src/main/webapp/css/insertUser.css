@@ -1,0 +1,23 @@
+@charset "UTF-8";
+	.inputbar{
+	size:40;
+	maxlength:20;
+}
+.titlename{
+	color: gold;
+}
+.rolecolor{
+background:gray;
+ 	color: gold;
+ }
+.inputboxIU, #idChk{
+	color: black;
+}	
+.insetUserBox{
+	width: 100%;
+}
+#check{
+	background-color: gray;
+	border: 1px solid black;
+	
+}

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="BoardDAO">
+
+   <select id="getBoard" resultType="board" parameterType="board">
+      SELECT * FROM BOARD WHERE ID=#{id}
+   </select>
+
+   <select id="getBoardList" resultType="board" parameterType="board">
+      SELECT * FROM BOARD WHERE 1=1
+      <if test="search=='title'">
+      	AND TITLE LIKE '%'||#{searchContent}||'%'
+      </if>
+      <if test="search=='content'">
+      	AND CONTENT LIKE '%'||#{searchContent}||'%'
+      </if>
+      <if test="search=='writer'">
+      	AND WRITER LIKE '%'||#{searchContent}||'%'
+      </if>
+      
+      ORDER BY ID DESC
+   </select>
+
+   
+<!-- 총 게시글 갯수 출력 -->
+<select id="countBoard" resultType="int">
+	SELECT COUNT(*) FROM BOARD
+</select>
+
+<!-- 페이징 처리 후 게시글 조회 -->
+<select id="selectBoard" resultType="com.food.myapp.board.BoardVO">
+	SELECT * 
+		FROM (
+			SELECT ROWNUM RN, A.* 
+				FROM (
+						SELECT * 
+						FROM BOARD 
+						ORDER BY ID DESC 
+						) A
+				)
+	WHERE RN BETWEEN #{start} AND #{end}
+</select>
+   
+   
+
+
+   <insert id="insertBoard" parameterType="board">
+      INSERT INTO BOARD (id,title,writer,content) VALUES((select nvl(max(id),0)+1 from board),#{title},#{writer},#{content})
+   </insert>
+
+   <update id="updateBoard" parameterType="board">
+      UPDATE BOARD SET TITLE=#{title}, CONTENT=#{content} WHERE ID=#{id}
+   </update>
+   
+   	<update id="viewCntPlus">
+		UPDATE BOARD SET CNT = CNT + 1 WHERE ID= #{id}
+	</update>
+   
+
+   <delete id="deleteBoard" parameterType="board">
+      DELETE BOARD  WHERE ID=#{id}
+   </delete>
+
+</mapper>
